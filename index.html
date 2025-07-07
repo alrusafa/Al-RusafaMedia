@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>برنامج اضافة الشعار - اعلام توزيع كهرباء الرصافة</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-blue: #0056b3;
+      --secondary-blue: #003d82;
+      --light-blue: #e6f0ff;
+      --accent-color: #007bff;
+      --text-color: #333;
+      --white: #fff;
+      --border-radius: 12px;
+      --error-color: #dc3545;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+    }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .login-container {
+      background-color: var(--white);
+      padding: 40px 30px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .logo {
+      width: auto;
+      height: auto;
+      margin-bottom: 15px;
+      background-color: transparent;
+      display: flex;
+      justify-content: center;
+    }
+
+    .custom-logo {
+      width: 150px;
+      height: auto;
+      max-height: 100px;
+      object-fit: contain;
+      filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.1));
+    }
+
+    .page-title {
+      color: var(--primary-blue);
+      margin: 15px 0 10px;
+      font-size: 28px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .subtitle {
+      color: var(--secondary-blue);
+      font-size: 16px;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: right;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to bottom, var(--primary-blue), var(--secondary-blue));
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(to bottom, var(--secondary-blue), var(--primary-blue));
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .spinner {
+      display: none;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* برنامج اضافة الشعار - مخفي في البداية */
+    #logoSystemContainer {
+      display: none;
+      background: white;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .ls-title {
+      color: var(--primary-blue);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .ls-instructions {
+      background-color: #e8f4fc;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+      text-align: right;
+    }
+
+    .ls-step {
+      margin-bottom: 8px;
+      color: #2c3e50;
+    }
+
+    .ls-file-inputs {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      gap: 20px;
+    }
+
+    .ls-file-input-container {
+      flex: 1;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .ls-btn {
+      background-color: var(--primary-blue);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      margin: 8px;
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    .ls-btn:hover {
+      opacity: 0.9;
+    }
+
+    .ls-btn-danger {
+      background-color: var(--error-color);
+    }
+
+    .ls-btn:disabled {
+      background-color: #95a5a6;
+      cursor: not-allowed;
+    }
+
+    .ls-logo-preview, .ls-canvas {
+      max-width: 100%;
+      max-height: 300px;
+      margin: 15px auto;
+      display: block;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .ls-thumbnails {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .ls-thumbnail {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .ls-thumbnail:hover {
+      border-color: var(--primary-blue);
+      transform: scale(1.05);
+    }
+
+    .ls-thumbnail.active {
+      border-color: #27ae60;
+      box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+    }
+
+    .ls-controls {
+      margin: 30px 0;
+    }
+
+    .ls-slider-container {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .ls-slider {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .ls-position-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .ls-slider-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ls-slider-group label {
+      min-width: 60px;
+      font-weight: 600;
+    }
+
+    .ls-position-slider {
+      flex-grow: 1;
+    }
+
+    .ls-batch-progress {
+      margin: 20px 0;
+      display: none;
+      text-align: center;
+    }
+
+    .ls-progress-bar {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+
+    .ls-progress {
+      height: 20px;
+      background-color: var(--primary-blue);
+      border-radius: 5px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        padding: 30px 20px;
+      }
+      
+      .page-title {
+        font-size: 24px;
+      }
+      
+      .custom-logo {
+        width: 120px;
+      }
+      
+      .ls-btn {
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+      
+      .ls-title {
+        font-size: 24px;
+      }
+      
+      .ls-file-inputs {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+      
+      .login-container {
+        padding: 25px 15px;
+      }
+      
+      .page-title {
+        font-size: 22px;
+      }
+      
+      .subtitle {
+        font-size: 15px;
+      }
+      
+      .custom-logo {
+        width: 100px;
+      }
+      
+      .ls-btn {
+        width: 100%;
+        margin: 8px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- واجهة تسجيل الدخول -->
+    <div id="loginContainer" class="login-container">
+      <div class="header">
+        <div class="logo">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgOQKcOujR3M9GdGSF_Vf4zo4JZ27NaniO-lB4lL9Eb7FWAkuizcFTQ7IrovJ6-MtHHhgE3QcpicE_c0o7FNn5LBPEEgK27TBgdRJamUhyphenhyphenmn2WQt4tkZxICudzp2L_yrt6wEogVLLb4Xzo/s1600/80755801_2654045651298178_3882047473715249152_n.jpg" 
+               alt="شعار توزيع كهرباء بغداد" 
+               class="custom-logo">
+        </div>
+        <h1 class="page-title">برنامج اضافة الشعار</h1>
+        <p class="subtitle">الرجاء تسجيل الدخول للوصول إلى النظام</p>
+      </div>
+      
+      <div class="form-group">
+        <label for="username">اسم المستخدم</label>
+        <input type="text" id="username" class="form-control" placeholder="أدخل اسم المستخدم">
+        <div id="usernameError" class="error-message">يجب إدخال اسم المستخدم</div>
+      </div>
+      <div class="form-group">
+        <label for="password">كلمة المرور</label>
+        <input type="password" id="password" class="form-control" placeholder="أدخل كلمة المرور">
+        <div id="passwordError" class="error-message">يجب إدخال كلمة المرور</div>
+      </div>
+      <button id="submitLogin" class="login-btn">تسجيل الدخول</button>
+      <div class="spinner" id="loginSpinner"></div>
+    </div>
+    
+    <!-- برنامج اضافة الشعار (مخفي في البداية) -->
+    <div id="logoSystemContainer" class="ls-container">
+      <h1 class="ls-title">برنامج إضافة الشعار على الصور</h1>
+      
+      <div class="ls-instructions">
+        <div class="ls-step">1. اختر الشعار (PNG شفاف)</div>
+        <div class="ls-step">2. اختر مجموعة الصور (حتى 15 صورة)</div>
+        <div class="ls-step">3. اضبط موقع وحجم الشعار على الصورة الأولى</div>
+        <div class="ls-step">4. اضغط "تطبيق على الكل" لمعالجة جميع الصور</div>
+        <div class="ls-step">5. احفظ الصور فرديًا أو أعد تعيين النظام</div>
+      </div>
+
+      <div class="ls-file-inputs">
+        <div class="ls-file-input-container">
+          <button id="lsUploadLogoBtn" class="ls-btn">
+            <i class="fas fa-upload"></i> تحميل الشعار
+          </button>
+          <input type="file" id="lsLogoInput" accept="image/png" style="display:none;">
+          <img id="lsLogoPreview" class="ls-logo-preview" alt="معاينة الشعار" style="display:none;">
+        </div>
+        
+        <div class="ls-file-input-container">
+          <button id="lsUploadImagesBtn" class="ls-btn">
+            <i class="fas fa-images"></i> تحميل مجموعة الصور
+          </button>
+          <input type="file" id="lsImagesInput" accept="image/*" multiple style="display:none;">
+          <div class="ls-thumbnails" id="lsThumbnails"></div>
+        </div>
+      </div>
+
+      <canvas id="lsCanvas" class="ls-canvas" style="display:none;"></canvas>
+
+      <div class="ls-controls" id="lsControls" style="display:none;">
+        <div class="ls-slider-container">
+          <input type="range" id="lsScaleSlider" class="ls-slider" min="0.1" max="1.0" step="0.01" value="0.25">
+          <div style="margin: 10px; text-align: center;">
+            <small>استخدم الشريط لتكبير/تصغير الشعار</small>
+          </div>
+        </div>
+        
+        <div class="ls-position-controls">
+          <div class="ls-slider-group">
+            <label for="lsXPosition">الموقع الأفقي:</label>
+            <input type="range" id="lsXPosition" class="ls-position-slider" min="0" max="100" step="1" value="50">
+          </div>
+          
+          <div class="ls-slider-group">
+            <label for="lsYPosition">الموقع الرأسي:</label>
+            <input type="range" id="lsYPosition" class="ls-position-slider" min="0" max="100" step="1" value="50">
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin: 20px 0;">
+          <small>استخدم الأشرطة لتحريك الشعار أفقياً وعمودياً</small><br>
+          <small>أو اسحب الشعار مباشرة على الصورة</small>
+        </div>
+      </div>
+
+      <div class="ls-batch-progress" id="lsBatchProgress">
+        <h3>جاري معالجة الصور...</h3>
+        <div class="ls-progress-bar">
+          <div class="ls-progress" id="lsProgressBar"></div>
+        </div>
+        <p id="lsProgressText">0/0</p>
+      </div>
+
+      <div style="text-align: center; margin-top: 30px;">
+        <button id="lsAddLogoBtn" class="ls-btn" disabled>
+          <i class="fas fa-plus-circle"></i> إضافة الشعار
+        </button>
+        <button id="lsApplyToAllBtn" class="ls-btn" disabled>
+          <i class="fas fa-cogs"></i> تطبيق على الكل
+        </button>
+        <button id="lsDownloadBtn" class="ls-btn" style="display:none;">
+          <i class="fas fa-download"></i> تحميل الصورة الحالية
+        </button>
+        <button id="lsResetBtn" class="ls-btn ls-btn-danger">
+          <i class="fas fa-redo"></i> إعادة تعيين النظام
+        </button>
+        <button id="lsLogoutBtn" class="ls-btn">
+          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // عناصر تسجيل الدخول
+      const loginContainer = document.getElementById('loginContainer');
+      const submitLogin = document.getElementById('submitLogin');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const usernameError = document.getElementById('usernameError');
+      const passwordError = document.getElementById('passwordError');
+      const loginSpinner = document.getElementById('loginSpinner');
+      const logoSystemContainer = document.getElementById('logoSystemContainer');
+      const lsLogoutBtn = document.getElementById('lsLogoutBtn');
+
+      // التحقق من بيانات الدخول
+      submitLogin.addEventListener('click', function() {
+        let isValid = true;
+        
+        if (usernameInput.value.trim() === '') {
+          usernameError.style.display = 'block';
+          isValid = false;
+        } else {
+          usernameError.style.display = 'none';
+        }
+        
+        if (passwordInput.value.trim() === '') {
+          passwordError.style.display = 'block';
+          isValid = false;
+        } else {
+          passwordError.style.display = 'none';
+        }
+        
+        if (isValid) {
+          loginSpinner.style.display = 'block';
+          
+          // Simulate login process
+          setTimeout(() => {
+            const validCredentials = {
+              username: 'admin',
+              password: 'e10adc3949ba59abbe56e057f20f883e' // MD5 hash for '123456'
+            };
+            
+            const enteredUsername = usernameInput.value.trim();
+            const enteredPassword = CryptoJS.MD5(passwordInput.value.trim()).toString();
+            
+            if (enteredUsername === validCredentials.username && 
+                enteredPassword === validCredentials.password) {
+              
+              // إخفاء واجهة تسجيل الدخول
+              loginContainer.style.display = 'none';
+              
+              // إظهار برنامج اضافة الشعار
+              logoSystemContainer.style.display = 'block';
+              
+            } else {
+              usernameError.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+              usernameError.style.display = 'block';
+              passwordError.style.display = 'none';
+            }
+            
+            loginSpinner.style.display = 'none';
+          }, 1500);
+        }
+      });
+
+      // زر تسجيل الخروج
+      lsLogoutBtn.addEventListener('click', function() {
+        // إظهار واجهة تسجيل الدخول
+        loginContainer.style.display = 'block';
+        
+        // إخفاء برنامج اضافة الشعار
+        logoSystemContainer.style.display = 'none';
+        
+        // Reset form
+        usernameInput.value = '';
+        passwordInput.value = '';
+        usernameError.style.display = 'none';
+        passwordError.style.display = 'none';
+        
+        // إعادة تعيين نظام الشعارات
+        lsResetSystem();
+      });
+
+      // Logo System Elements
+      const lsUploadLogoBtn = document.getElementById('lsUploadLogoBtn');
+      const lsLogoInput = document.getElementById('lsLogoInput');
+      const lsLogoPreview = document.getElementById('lsLogoPreview');
+      const lsUploadImagesBtn = document.getElementById('lsUploadImagesBtn');
+      const lsImagesInput = document.getElementById('lsImagesInput');
+      const lsThumbnailsContainer = document.getElementById('lsThumbnails');
+      const lsCanvas = document.getElementById('lsCanvas');
+      const lsCtx = lsCanvas.getContext('2d');
+      const lsAddLogoBtn = document.getElementById('lsAddLogoBtn');
+      const lsApplyToAllBtn = document.getElementById('lsApplyToAllBtn');
+      const lsDownloadBtn = document.getElementById('lsDownloadBtn');
+      const lsResetBtn = document.getElementById('lsResetBtn');
+      const lsScaleSlider = document.getElementById('lsScaleSlider');
+      const lsXPositionSlider = document.getElementById('lsXPosition');
+      const lsYPositionSlider = document.getElementById('lsYPosition');
+      const lsControls = document.getElementById('lsControls');
+      const lsBatchProgress = document.getElementById('lsBatchProgress');
+      const lsProgressBar = document.getElementById('lsProgressBar');
+      const lsProgressText = document.getElementById('lsProgressText');
+      
+      // متغيرات النظام
+      let lsLogoImage = new Image();
+      let lsCurrentImages = [];
+      let lsCurrentIndex = 0;
+      let lsLogoX = 0, lsLogoY = 0, lsLogoScale = 0.25;
+      let lsIsDragging = false;
+      let lsDragStartX = 0, lsDragStartY = 0;
+      let lsLogoWidth = 0, lsLogoHeight = 0;
+
+      // أحداث النظام
+      lsUploadLogoBtn.addEventListener('click', () => lsLogoInput.click());
+      lsUploadImagesBtn.addEventListener('click', () => lsImagesInput.click());
+
+      lsLogoInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          lsLogoImage.onload = () => {
+            lsLogoPreview.src = e.target.result;
+            lsLogoPreview.style.display = 'block';
+            lsCheckReadyState();
+          }
+          lsLogoImage.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      });
+
+      lsImagesInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files).slice(0, 15);
+        if (files.length === 0) return;
+        
+        lsCurrentImages = [];
+        lsThumbnailsContainer.innerHTML = '';
+        
+        files.forEach((file, index) => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+              lsCurrentImages.push({
+                file: file,
+                url: e.target.result,
+                img: img
+              });
+              
+              const thumb = document.createElement('img');
+              thumb.src = e.target.result;
+              thumb.className = 'ls-thumbnail';
+              thumb.dataset.index = index;
+              thumb.addEventListener('click', () => lsShowImage(index));
+              lsThumbnailsContainer.appendChild(thumb);
+              
+              if (index === 0) lsShowImage(0);
+              lsCheckReadyState();
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+
+      function lsShowImage(index) {
+        if (index < 0 || index >= lsCurrentImages.length) return;
+        
+        lsCurrentIndex = index;
+        document.querySelectorAll('.ls-thumbnail').forEach((thumb, i) => {
+          thumb.classList.toggle('active', i === index);
+        });
+        
+        lsDrawCanvas();
+      }
+
+      function lsCheckReadyState() {
+        lsAddLogoBtn.disabled = !(lsLogoImage.src && lsCurrentImages.length > 0);
+        lsApplyToAllBtn.disabled = !(lsLogoImage.src && lsCurrentImages.length > 0);
+      }
+
+      function lsCalculateLogoDimensions() {
+        lsLogoWidth = lsCanvas.width * lsLogoScale;
+        lsLogoHeight = lsLogoImage.height * (lsLogoWidth / lsLogoImage.width);
+      }
+
+      function lsIsCursorOnLogo(x, y) {
+        return x >= lsLogoX && x <= lsLogoX + lsLogoWidth && 
+               y >= lsLogoY && y <= lsLogoY + lsLogoHeight;
+      }
+
+      lsAddLogoBtn.addEventListener('click', () => {
+        if (lsCurrentImages.length === 0) return;
+        
+        const img = lsCurrentImages[lsCurrentIndex].img;
+        let width = img.width;
+        let height = img.height;
+        const maxSize = 1200;
+        
+        if (width > maxSize || height > maxSize) {
+          const ratio = Math.min(maxSize / width, maxSize / height);
+          width = Math.floor(width * ratio);
+          height = Math.floor(height * ratio);
+        }
+        
+        lsCanvas.width = width;
+        lsCanvas.height = height;
+
+        lsCalculateLogoDimensions();
+        lsLogoX = (width - lsLogoWidth) / 2;
+        lsLogoY = (height - lsLogoHeight) / 2;
+
+        lsXPositionSlider.value = 50;
+        lsYPositionSlider.value = 50;
+
+        lsDrawCanvas();
+
+        lsCanvas.style.display = 'block';
+        lsControls.style.display = 'block';
+        lsDownloadBtn.style.display = 'inline-block';
+      });
+
+      function lsDrawCanvas() {
+        if (lsCurrentImages.length === 0) return;
+        
+        const img = lsCurrentImages[lsCurrentIndex].img;
+        lsCtx.clearRect(0, 0, lsCanvas.width, lsCanvas.height);
+        
+        lsCtx.drawImage(img, 0, 0, lsCanvas.width, lsCanvas.height);
+        
+        if (lsLogoImage.src) {
+          lsCalculateLogoDimensions();
+          lsCtx.imageSmoothingEnabled = true;
+          lsCtx.imageSmoothingQuality = 'high';
+          lsCtx.drawImage(lsLogoImage, lsLogoX, lsLogoY, lsLogoWidth, lsLogoHeight);
+        }
+      }
+
+      lsScaleSlider.addEventListener('input', function() {
+        lsLogoScale = parseFloat(this.value);
+        lsDrawCanvas();
+        
+        const xPercent = (lsLogoX / (lsCanvas.width - lsLogoWidth)) * 100;
+        const yPercent = (lsLogoY / (lsCanvas.height - lsLogoHeight)) * 100;
+        lsXPositionSlider.value = xPercent;
+        lsYPositionSlider.value = yPercent;
+      });
+
+      lsXPositionSlider.addEventListener('input', function() {
+        const width = lsCanvas.width;
+        lsLogoX = (parseInt(this.value) / 100) * (width - lsLogoWidth);
+        lsDrawCanvas();
+      });
+
+      lsYPositionSlider.addEventListener('input', function() {
+        const height = lsCanvas.height;
+        lsLogoY = (parseInt(this.value) / 100) * (height - lsLogoHeight);
+        lsDrawCanvas();
+      });
+
+      lsCanvas.addEventListener('mousedown', (e) => {
+        const rect = lsCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        if (lsIsCursorOnLogo(x, y)) {
+          lsIsDragging = true;
+          lsDragStartX = x - lsLogoX;
+          lsDragStartY = y - lsLogoY;
+          lsCanvas.style.cursor = 'grabbing';
+        }
+      });
+
+      lsCanvas.addEventListener('mousemove', (e) => {
+        const rect = lsCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        if (lsIsDragging) {
+          lsLogoX = x - lsDragStartX;
+          lsLogoY = y - lsDragStartY;
+          
+          lsLogoX = Math.max(0, Math.min(lsCanvas.width - lsLogoWidth, lsLogoX));
+          lsLogoY = Math.max(0, Math.min(lsCanvas.height - lsLogoHeight, lsLogoY));
+          
+          const xPercent = (lsLogoX / (lsCanvas.width - lsLogoWidth)) * 100;
+          const yPercent = (lsLogoY / (lsCanvas.height - lsLogoHeight)) * 100;
+          lsXPositionSlider.value = xPercent;
+          lsYPositionSlider.value = yPercent;
+          
+          lsDrawCanvas();
+        } else if (lsIsCursorOnLogo(x, y)) {
+          lsCanvas.style.cursor = 'grab';
+        } else {
+          lsCanvas.style.cursor = 'default';
+        }
+      });
+
+      lsCanvas.addEventListener('mouseup', () => {
+        lsIsDragging = false;
+        lsCanvas.style.cursor = 'default';
+      });
+
+      lsCanvas.addEventListener('mouseleave', () => {
+        lsIsDragging = false;
+        lsCanvas.style.cursor = 'default';
+      });
+
+      lsDownloadBtn.addEventListener('click', () => {
+        if (lsCurrentImages.length === 0) return;
+        
+        const link = document.createElement('a');
+        link.download = `صورة_مع_شعار_${lsCurrentIndex + 1}.png`;
+        link.href = lsCanvas.toDataURL('image/png');
+        link.click();
+      });
+
+      lsApplyToAllBtn.addEventListener('click', async () => {
+        if (lsCurrentImages.length === 0 || !lsLogoImage.src) return;
+        
+        lsBatchProgress.style.display = 'block';
+        lsProgressBar.style.width = '0%';
+        lsProgressText.textContent = `0/${lsCurrentImages.length}`;
+        
+        const savedX = lsLogoX;
+        const savedY = lsLogoY;
+        const savedScale = lsLogoScale;
+        const savedCanvasWidth = lsCanvas.width;
+        const savedCanvasHeight = lsCanvas.height;
+        
+        // دالة لتنزيل الصور مع تأخير
+        const downloadImagesSequentially = async () => {
+          for (let i = 0; i < lsCurrentImages.length; i++) {
+            const img = lsCurrentImages[i].img;
+            
+            let width = img.width;
+            let height = img.height;
+            const maxSize = 1200;
+            
+            if (width > maxSize || height > maxSize) {
+              const ratio = Math.min(maxSize / width, maxSize / height);
+              width = Math.floor(width * ratio);
+              height = Math.floor(height * ratio);
+            }
+            
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = width;
+            tempCanvas.height = height;
+            const tempCtx = tempCanvas.getContext('2d');
+            
+            tempCtx.drawImage(img, 0, 0, width, height);
+            
+            const currentLogoWidth = width * savedScale;
+            const currentLogoHeight = lsLogoImage.height * (currentLogoWidth / lsLogoImage.width);
+            
+            const relativeX = (savedX / savedCanvasWidth) * width;
+            const relativeY = (savedY / savedCanvasHeight) * height;
+            
+            tempCtx.imageSmoothingEnabled = true;
+            tempCtx.imageSmoothingQuality = 'high';
+            tempCtx.drawImage(lsLogoImage, relativeX, relativeY, currentLogoWidth, currentLogoHeight);
+            
+            // إنشاء رابط التنزيل
+            const link = document.createElement('a');
+            link.download = `صورة_مع_شعار_${i + 1}.png`;
+            link.href = tempCanvas.toDataURL('image/png');
+            
+            // إضافة الرابط إلى DOM مؤقتًا
+            document.body.appendChild(link);
+            link.click();
+            
+            // تأخير قبل إزالة الرابط والمتابعة إلى الصورة التالية
+            await new Promise(resolve => {
+              setTimeout(() => {
+                document.body.removeChild(link);
+                resolve();
+              }, 300); // تأخير كافٍ لتنزيل كل صورة
+            });
+            
+            lsProgressBar.style.width = `${((i + 1) / lsCurrentImages.length) * 100}%`;
+            lsProgressText.textContent = `${i + 1}/${lsCurrentImages.length}`;
+          }
+        };
+        
+        await downloadImagesSequentially();
+        lsBatchProgress.style.display = 'none';
+      });
+
+      function lsResetSystem() {
+        // إعادة تعيين جميع المتغيرات
+        lsLogoImage = new Image();
+        lsCurrentImages = [];
+        lsCurrentIndex = 0;
+        lsLogoX = 0;
+        lsLogoY = 0;
+        lsLogoScale = 0.25;
+        
+        // إعادة تعيين واجهة المستخدم
+        lsLogoPreview.src = '';
+        lsLogoPreview.style.display = 'none';
+        lsThumbnailsContainer.innerHTML = '';
+        lsCanvas.style.display = 'none';
+        lsControls.style.display = 'none';
+        lsDownloadBtn.style.display = 'none';
+        lsBatchProgress.style.display = 'none';
+        
+        // إعادة تعيين عناصر التحكم
+        lsScaleSlider.value = 0.25;
+        lsXPositionSlider.value = 50;
+        lsYPositionSlider.value = 50;
+        
+        // إعادة تعيين حالة الأزرار
+        lsAddLogoBtn.disabled = true;
+        lsApplyToAllBtn.disabled = true;
+        
+        // إعادة تعيين حقول الرفع
+        lsLogoInput.value = '';
+        lsImagesInput.value = '';
+      }
+
+      lsResetBtn.addEventListener('click', lsResetSystem);
+    });
+  </script>
+</body>
+</html>
